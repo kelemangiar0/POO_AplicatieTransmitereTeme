@@ -20,30 +20,25 @@ using namespace std;
 #define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "27015"
 
-int __cdecl main(int argc, char** argv)
+SOCKET initialiseConnection(int argc, char** argv)
 {
-    printf("CLIENT\n\n\n");
     WSADATA wsaData;
     SOCKET ConnectSocket = INVALID_SOCKET;
-    struct addrinfo* result = NULL,
-        * ptr = NULL,
-        hints;
-    const char* sendbuf = "Succesfully connected to server!\n\n";
-    char recvbuf[DEFAULT_BUFLEN];
+    struct addrinfo* result = NULL, * ptr = NULL, hints;
     int iResult;
-    int recvbuflen = DEFAULT_BUFLEN;
+    
 
     // Validate the parameters
     if (argc != 2) {
         printf("usage: %s server-name\n", argv[0]);
-        return 1;
+        exit(1);
     }
 
     // Initialize Winsock
     iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
     if (iResult != 0) {
         printf("WSAStartup failed with error: %d\n", iResult);
-        return 1;
+        exit(1);
     }
 
     ZeroMemory(&hints, sizeof(hints));
@@ -56,7 +51,7 @@ int __cdecl main(int argc, char** argv)
     if (iResult != 0) {
         printf("getaddrinfo failed with error: %d\n", iResult);
         WSACleanup();
-        return 1;
+        exit(1);
     }
 
     // Attempt to connect to an address until one succeeds
@@ -68,7 +63,7 @@ int __cdecl main(int argc, char** argv)
         if (ConnectSocket == INVALID_SOCKET) {
             printf("socket failed with error: %ld\n", WSAGetLastError());
             WSACleanup();
-            return 1;
+            exit(1);
         }
 
         // Connect to server.
@@ -86,36 +81,127 @@ int __cdecl main(int argc, char** argv)
     if (ConnectSocket == INVALID_SOCKET) {
         printf("Unable to connect to server!\n");
         WSACleanup();
-        return 1;
+        exit(1);
     }
-  
-    char username[50];
-    char password[50];
-   
-    printf("Insert username: ");
-    scanf("%s", username);
-    iResult = send(ConnectSocket, username, (int)strlen(username) + 1, 0);
 
-    printf("Insert password: ");
-    scanf("%s", password);
-    iResult = send(ConnectSocket, password, (int)strlen(password) + 1, 0);
+    return ConnectSocket;
+}
+void createUser(SOCKET *ConnectSocket)
+{
+    cout << "Insert new username:";
+    string username;
+    cin >> username;
+    send(*ConnectSocket, username.c_str(), DEFAULT_BUFLEN, 0);
+    cout << "Insert new password:";
+    string password;
+    cin >> password;
+    send(*ConnectSocket, password.c_str(), DEFAULT_BUFLEN, 0);
+    cout << "Insert new type of user:";
+    string type;
+    cin >> type;
+    send(*ConnectSocket, type.c_str(), DEFAULT_BUFLEN, 0);
+
+    string grupa;
+    if (type == "student")
+    {
+        cout << "Insert group for student:";
+        cin >> grupa;
+    }
+    else
+        grupa = "unavailable";
+    send(*ConnectSocket, grupa.c_str(), DEFAULT_BUFLEN, 0);
+}
+void deleteUser(SOCKET *ConnectSocket)
+{
+    string user;
+    cout << "User to delete (insert username):";
+    cin >> user;
+    send(*ConnectSocket, user.c_str(), DEFAULT_BUFLEN, 0);
+}
+
+int __cdecl main(int argc, char** argv)
+{
+    printf("CLIENT\n\n\n");
     
-    iResult = recv(ConnectSocket, username, 50, 0);
-    if (strcmp(username, "login") == 0)
+    SOCKET ConnectSocket = INVALID_SOCKET;
+    ConnectSocket = initialiseConnection(argc,argv);
+
+    int iResult = 0;
+    
+    char serverResponse[DEFAULT_BUFLEN];
+    string username;
+    string password;
+
+againLogin:
+
+    cout << "Username:";
+    cin >> username;
+    send(ConnectSocket, username.c_str(), (int)strlen(username.c_str()) + 1, 0);
+
+    cout << "Password:";
+    cin >> password;
+    send(ConnectSocket, password.c_str(), (int)strlen(password.c_str()) + 1, 0);
+
+    
+    recv(ConnectSocket, serverResponse, DEFAULT_BUFLEN, 0);
+
+    if (strcmp(serverResponse, "studentLogin") == 0)
     {
         //to be continued
-        cout << "Login succesfull!" << endl;
+        cout << "Welcome, student!" << endl;
+        char command[DEFAULT_BUFLEN];
+        while (strcmp(command, "quit") != 0)
+        {
+            cout << "Comanda:";
+            cin >> command;
+        }
+        iResult = send(ConnectSocket, "quit", 50, 0);
     }
-    char buf[50];
-    while (strcmp(buf, "quit")!=0)
+    if (strcmp(serverResponse, "profesorLogin") == 0)
     {
-        cout << "Comanda: ";
-        cin >> buf;
-        iResult = send(ConnectSocket, buf, (int)strlen(buf) + 1, 0);
+        //to be continued
+        cout << "Welcome, profesor!" << endl;
+        char command[DEFAULT_BUFLEN];
+        while (strcmp(command, "quit") != 0)
+        {
+            cout << "Comanda:";
+            cin >> command;
+        }
+        iResult = send(ConnectSocket, "quit", 50, 0);
     }
-    
+    if (strcmp(serverResponse, "adminLogin") == 0)
+    {
+        cout << "Welcome, admin!" << endl;
+        char command[DEFAULT_BUFLEN];
+        do
+        {
+            cout << "Comanda:";
+            cin >> command;
+
+            send(ConnectSocket, command, DEFAULT_BUFLEN, 0);
+
+            if (strcmp(command, "create") == 0)
+                createUser(&ConnectSocket);
+           
+            if (strcmp(command, "delete") == 0)
+                deleteUser(&ConnectSocket);
+            
+        } while (strcmp(command, "quit") != 0);
+
+    }
+    if (strcmp(serverResponse, "incorrectPassword") == 0)
+    {
+        cout << "Incorrect password! Try again..." << endl;
+        goto againLogin;
+    }
+    if (strcmp(serverResponse, "userNotFound") == 0)
+    {
+        cout << "User not into database. Contact admin, then try again..." << endl;
+        goto againLogin;
+    }
+
     closesocket(ConnectSocket); //aici imi inchide socketul
     WSACleanup();
-    
+
     return 0;
 }
