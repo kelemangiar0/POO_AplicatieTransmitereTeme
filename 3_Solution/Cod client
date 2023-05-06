@@ -108,7 +108,7 @@ void createUser(SOCKET *ConnectSocket)
         cin >> grupa;
     }
     else
-        grupa = "unavailable";
+        grupa = "NULL";
     send(*ConnectSocket, grupa.c_str(), DEFAULT_BUFLEN, 0);
 }
 void deleteUser(SOCKET *ConnectSocket)
@@ -117,6 +117,18 @@ void deleteUser(SOCKET *ConnectSocket)
     cout << "User to delete (insert username):";
     cin >> user;
     send(*ConnectSocket, user.c_str(), DEFAULT_BUFLEN, 0);
+}
+void createHomework(SOCKET* ConnectSocket)
+{
+    string grupa;
+    cout << "Introduceti grupa:";
+    cin >> grupa;
+    send(*ConnectSocket, grupa.c_str(), DEFAULT_BUFLEN, 0);
+
+    string termenLimita;
+    cout << "Introduceti termenul limita:";
+    cin >> termenLimita;
+    send(*ConnectSocket, termenLimita.c_str(), DEFAULT_BUFLEN, 0);
 }
 
 int __cdecl main(int argc, char** argv)
@@ -149,29 +161,39 @@ againLogin:
     {
         //to be continued
         cout << "Welcome, student!" << endl;
+
         char command[DEFAULT_BUFLEN];
-        while (strcmp(command, "quit") != 0)
+        do
         {
             cout << "Comanda:";
             cin >> command;
-        }
-        iResult = send(ConnectSocket, "quit", 50, 0);
+
+            send(ConnectSocket, command, DEFAULT_BUFLEN, 0);
+
+        } while (strcmp(command, "quit") != 0);
     }
     if (strcmp(serverResponse, "profesorLogin") == 0)
     {
         //to be continued
         cout << "Welcome, profesor!" << endl;
+
         char command[DEFAULT_BUFLEN];
-        while (strcmp(command, "quit") != 0)
+        do
         {
             cout << "Comanda:";
             cin >> command;
-        }
-        iResult = send(ConnectSocket, "quit", 50, 0);
+
+            send(ConnectSocket, command, DEFAULT_BUFLEN, 0);
+
+            if (strcmp(command, "create") == 0)
+                createHomework(&ConnectSocket);
+
+        } while (strcmp(command, "quit") != 0);
     }
     if (strcmp(serverResponse, "adminLogin") == 0)
     {
         cout << "Welcome, admin!" << endl;
+
         char command[DEFAULT_BUFLEN];
         do
         {
