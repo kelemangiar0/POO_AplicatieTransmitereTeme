@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>afterloginadmin</class>
+ <widget class="QMainWindow" name="afterloginadmin">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1280</width>
+    <height>732</height>
+   </rect>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1280</width>
+    <height>732</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>1321</width>
+      <height>731</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(D:/Teme Proiecte/POO PROIECT/background.png);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QToolButton" name="toolButton">
+    <property name="geometry">
+     <rect>
+      <x>1170</x>
+      <y>0</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QToolButton {
+    font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    color: #444444;
+    border-radius: 5px;
+    padding: 8px;
+    border: 1px solid #cccccc;
+    background-color: #f2f2f2;
+}
+
+QPushButton::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left-width: 1px;
+    border-left-color: #cccccc;
+    border-left-style: solid;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: #ffcc99;
+}
+
+QToolButton::down-arrow {
+    image: url(path/to/down-arrow.png);
+    width: 12px;
+    height: 12px;
+}
+QToolButton:hover {
+    background-color: #cccccc;
+}
+
+QToolButton:pressed {
+    background-color: #999999;
+}</string>
+    </property>
+    <property name="text">
+     <string>Logout</string>
+    </property>
+   </widget>
+   <widget class="QToolButton" name="creationButton">
+    <property name="geometry">
+     <rect>
+      <x>550</x>
+      <y>221</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QToolButton {
+    font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    color: #444444;
+    border-radius: 5px;
+    padding: 8px;
+    border: 1px solid #cccccc;
+    background-color: #f2f2f2;
+}
+
+QPushButton::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left-width: 1px;
+    border-left-color: #cccccc;
+    border-left-style: solid;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: #ffcc99;
+}
+
+QToolButton::down-arrow {
+    image: url(path/to/down-arrow.png);
+    width: 12px;
+    height: 12px;
+}
+QToolButton:hover {
+    background-color: #cccccc;
+}
+
+QToolButton:pressed {
+    background-color: #999999;
+}</string>
+    </property>
+    <property name="text">
+     <string>Creeaza cont</string>
+    </property>
+   </widget>
+   <widget class="QToolButton" name="modifyButton">
+    <property name="geometry">
+     <rect>
+      <x>550</x>
+      <y>271</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QToolButton {
+    font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    color: #444444;
+    border-radius: 5px;
+    padding: 8px;
+    border: 1px solid #cccccc;
+    background-color: #f2f2f2;
+}
+
+QToolButton::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left-width: 1px;
+    border-left-color: #cccccc;
+    border-left-style: solid;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: #ffcc99;
+}
+
+QToolButton::down-arrow {
+    image: url(path/to/down-arrow.png);
+    width: 12px;
+    height: 12px;
+}
+QToolButton:hover {
+    background-color: #cccccc;
+}
+
+QToolButton:pressed {
+    background-color: #999999;
+}</string>
+    </property>
+    <property name="text">
+     <string>Modifica cont</string>
+    </property>
+   </widget>
+   <widget class="QToolButton" name="deleteButton">
+    <property name="geometry">
+     <rect>
+      <x>550</x>
+      <y>321</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QToolButton {
+    font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    color: #444444;
+    border-radius: 5px;
+    padding: 8px;
+    border: 1px solid #cccccc;
+    background-color: #f2f2f2;
+}
+
+QToolButton::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left-width: 1px;
+    border-left-color: #cccccc;
+    border-left-style: solid;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: #ffcc99;
+}
+
+QToolButton::down-arrow {
+    image: url(path/to/down-arrow.png);
+    width: 12px;
+    height: 12px;
+}
+QToolButton:hover {
+    background-color: #cccccc;
+}
+
+QToolButton:pressed {
+    background-color: #999999;
+}</string>
+    </property>
+    <property name="text">
+     <string>Sterge cont</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
