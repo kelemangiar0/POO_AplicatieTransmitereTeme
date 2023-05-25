@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\kelem\source\repos\Server+DB_Link\Server+DB_Link\</FILEPATH>
+      <FILENAME>Database.cpp</FILENAME>
+      <LINE>155</LINE>
+      <COLUMN>27</COLUMN>
+    </SFA>
+    <DEFECTCODE>6246</DEFECTCODE>
+    <DESCRIPTION>Local declaration of 'stmt' hides declaration of the same name in outer scope. For additional information, see previous declaration at line '132' of 'c:\users\kelem\source\repos\server+db_link\server+db_link\database.cpp'.</DESCRIPTION>
+    <FUNCTION>Database::generateHomeworkReport</FUNCTION>
+    <DECORATED>?generateHomeworkReport@Database@@QEAA_NH@Z</DECORATED>
+    <FUNCLINE>129</FUNCLINE>
+    <PATH>
+      <SFA>
+        <FILEPATH>C:\Users\kelem\source\repos\Server+DB_Link\Server+DB_Link\</FILEPATH>
+        <FILENAME>Database.cpp</FILENAME>
+        <LINE>132</LINE>
+        <COLUMN>23</COLUMN>
+      </SFA>
+    </PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\kelem\source\repos\Server+DB_Link\Server+DB_Link\</FILEPATH>
+      <FILENAME>Database.cpp</FILENAME>
+      <LINE>163</LINE>
+      <COLUMN>24</COLUMN>
+    </SFA>
+    <DEFECTCODE>6246</DEFECTCODE>
+    <DESCRIPTION>Local declaration of 'result' hides declaration of the same name in outer scope. For additional information, see previous declaration at line '140' of 'c:\users\kelem\source\repos\server+db_link\server+db_link\database.cpp'.</DESCRIPTION>
+    <FUNCTION>Database::generateHomeworkReport</FUNCTION>
+    <DECORATED>?generateHomeworkReport@Database@@QEAA_NH@Z</DECORATED>
+    <FUNCLINE>129</FUNCLINE>
+    <PATH>
+      <SFA>
+        <FILEPATH>C:\Users\kelem\source\repos\Server+DB_Link\Server+DB_Link\</FILEPATH>
+        <FILENAME>Database.cpp</FILENAME>
+        <LINE>140</LINE>
+        <COLUMN>20</COLUMN>
+      </SFA>
+    </PATH>
+  </DEFECT>
+</DEFECTS>

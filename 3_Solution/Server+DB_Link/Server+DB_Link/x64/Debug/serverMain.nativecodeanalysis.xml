@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\kelem\source\repos\Server+DB_Link\Server+DB_Link\</FILEPATH>
+      <FILENAME>serverMain.cpp</FILENAME>
+      <LINE>232</LINE>
+      <COLUMN>12</COLUMN>
+    </SFA>
+    <DEFECTCODE>6246</DEFECTCODE>
+    <DESCRIPTION>Local declaration of 'homeworkID' hides declaration of the same name in outer scope. For additional information, see previous declaration at line '177' of 'c:\users\kelem\source\repos\server+db_link\server+db_link\servermain.cpp'.</DESCRIPTION>
+    <FUNCTION>viewStudentsAssignedToHomework</FUNCTION>
+    <DECORATED>?viewStudentsAssignedToHomework@@YAXPEA_K@Z</DECORATED>
+    <FUNCLINE>154</FUNCLINE>
+    <PATH>
+      <SFA>
+        <FILEPATH>C:\Users\kelem\source\repos\Server+DB_Link\Server+DB_Link\</FILEPATH>
+        <FILENAME>serverMain.cpp</FILENAME>
+        <LINE>177</LINE>
+        <COLUMN>9</COLUMN>
+      </SFA>
+    </PATH>
+  </DEFECT>
+</DEFECTS>

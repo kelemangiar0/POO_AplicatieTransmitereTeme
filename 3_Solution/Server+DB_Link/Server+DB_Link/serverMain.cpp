@@ -11,10 +11,10 @@
 #include <ws2tcpip.h>
 #include <cstdlib>
 #include <filesystem>
+
 using namespace std;
 namespace fs = std::filesystem;
 
-//#include <iostream>
 #include <sql.h>
 #include <sqlext.h>
 #include <sqltypes.h>
@@ -22,6 +22,33 @@ namespace fs = std::filesystem;
 #include "Database.h"
 
 
+#include <openssl/sha.h>
+#include <cstring>
+#include <iomanip>
+#include <sstream>
+
+char* hashPassword(const char* password)
+{
+    // Calculam hash-ul SHA-1 al parolei
+    const int hashSize = SHA_DIGEST_LENGTH;
+    unsigned char hash[hashSize];
+    SHA1((const unsigned char*)password, strlen(password), hash);
+
+    // Convertim hash-ul la un sir de caractere hexazecimal pentru a putea fi returnat
+    std::ostringstream ss;
+    ss << std::hex << std::setfill('0');
+    for (int i = 0; i < hashSize; i++)
+    {
+        ss << std::setw(2) << static_cast<int>(hash[i]);
+    }
+
+    // Returnam hash-ul sub forma de sir de caractere
+    std::string hashedPasswordString = ss.str();
+    char* hashedPassword = new char[hashedPasswordString.length() + 1];
+    strcpy(hashedPassword, hashedPasswordString.c_str());
+
+    return hashedPassword;
+}
 
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
@@ -50,7 +77,10 @@ void createUser(SOCKET* AcceptSocket)
         c = std::toupper(c);
     }
   
-    User newUser( username,password,type,standardGrupa.c_str());
+    char hash[50];
+    strcpy(hash, hashPassword(password));
+
+    User newUser( username,hash,type,standardGrupa.c_str());
     if (db.createUser(newUser)) {
         std::cout << "Admin created user..." << endl;
     }
@@ -129,7 +159,10 @@ void updateUser(SOCKET* AcceptSocket)
         c = std::toupper(c);
     }
 
-    db.updateUserDB(username,parolaNoua, standardGrupa);
+
+    char hash[50];
+    strcpy(hash, hashPassword(parolaNoua));
+    db.updateUserDB(username,hash, standardGrupa);
     std::cout << "Admin updated user..." << endl;
 }   
 //gata functii admin
@@ -177,6 +210,8 @@ void viewStudentsAssignedToHomework(SOCKET* AcceptSocket)
     char homeworkID[DEFAULT_BUFLEN];
     recv(*AcceptSocket, homeworkID, DEFAULT_BUFLEN, 0);
 
+    //tratez cazul putin probabil ca profesorul sa nu selecteze vreo tema inainte de apasarea butonului de back
+    if (strcmp(homeworkID, "back") == 0) return;
 
 showAgain:
 
@@ -198,11 +233,13 @@ showAgain:
         send(*AcceptSocket, user.getGrupaStudii().c_str(), DEFAULT_BUFLEN, 0);
         Sleep(1);
 
-        //send their status
+        char statusMessage[DEFAULT_BUFLEN];
         if (status)
-            send(*AcceptSocket, "Complet", DEFAULT_BUFLEN, 0);
+            strcpy(statusMessage, "Complet");
         else
-            send(*AcceptSocket, "Incomplet", DEFAULT_BUFLEN, 0);
+            strcpy(statusMessage, "Incomplet");
+
+        send(*AcceptSocket, statusMessage, DEFAULT_BUFLEN, 0);
         Sleep(1);
     }
 
@@ -239,7 +276,7 @@ recieveAnotherCommand:
         
         //incep trimiterea fisierului
         std::ifstream inFile(fisierAsociat.getCale().c_str(), std::ios::binary);
-        if (!inFile) {  return; }
+        if (!inFile) { cout << "Eroare la deschiderea fisierului!" << endl; return; }
 
         char buffer[65536];
         int bytesSent;
@@ -274,7 +311,7 @@ recieveAnotherCommand:
         recv(*AcceptSocket, user, DEFAULT_BUFLEN, 0);
         recv(*AcceptSocket, nota, DEFAULT_BUFLEN, 0);
         
-        db.markHomework(atoi(homeworkID), user, atof(nota));
+        db.markHomework(atoi(homeworkID), user, (float)atof(nota));
         goto recieveAnotherCommand;
     }
     if (strcmp(buf, "generateReport") == 0)
@@ -345,14 +382,15 @@ void seeHomework(SOCKET* AcceptSocket,const User& user)
         send(*AcceptSocket, buffer, DEFAULT_BUFLEN, 0);
         Sleep(1);
         
-        //aici enat mai trebuie sa faca un recieve de nota si vede el ce face cu ea
-        //face o verificare la nota si in functie de rezultatul primit de el afiseaza waiting sau afiseaza nota
         
-        //char status[DEFAULT_BUFLEN];
+        
+        char status[DEFAULT_BUFLEN];
         if (db.getHomeworkStatus(user, hw[i].getID()) == 1)
-            send(*AcceptSocket, "Complet", DEFAULT_BUFLEN, 0);
+            strcpy(status, "Complet");
         else 
-            send(*AcceptSocket, "Incomplet", DEFAULT_BUFLEN, 0);
+            strcpy(status, "Incomplet");
+
+        send(*AcceptSocket, status, DEFAULT_BUFLEN, 0);
         Sleep(1);
     }
 }
@@ -374,9 +412,9 @@ DWORD WINAPI ProcessClient(LPVOID lpParameter)
     int iResult;
 
     iResult = recv(AcceptSocket, serverUser, 50, 0);
-    //cout << ip << " (" << AcceptSocket << ") User recieved: " << serverUser << endl;
     iResult = recv(AcceptSocket, serverPassword, 50, 0);
-    //cout << ip << " (" << AcceptSocket << ") Password recieved: " << serverPassword << endl;
+    char hash[50];
+    strcpy(hash, hashPassword(serverPassword));
         
 
     bool userFound = false;
@@ -384,7 +422,7 @@ DWORD WINAPI ProcessClient(LPVOID lpParameter)
     for ( auto& user : users)
     {
         userFound = true;
-        if (db.verifyCredentials(serverUser, serverPassword))
+        if (db.verifyCredentials(serverUser, hash))
         {
             string userType = user.getTipCont();
             std::cout << ip << " (" << AcceptSocket << ") User logged in: " << user.getUsername() << endl;
@@ -399,19 +437,16 @@ DWORD WINAPI ProcessClient(LPVOID lpParameter)
                 {
                     seeHomework(&AcceptSocket,user);
                     
-                    recv(AcceptSocket, command, DEFAULT_BUFLEN, 0); //eu primesc tema pe care a selectat - o, se expandeaza in dreapta, si acolo am optiunea de upload file
+                    recv(AcceptSocket, command, DEFAULT_BUFLEN, 0); 
 
-                    if (strcmp(command, "uploadFile") == 0) //aici trebuie sa stiu deja catre care tema vreau sa trimit fisierul
+                    if (strcmp(command, "uploadFile") == 0)
                     {
                         char buf[DEFAULT_BUFLEN];
                         recv(AcceptSocket, buf, DEFAULT_BUFLEN, 0);
                         int nr = atoi(buf);
                         Homework hw = db.getHomeworkByID(nr);
 
-
-                        //sa verific calea am un % in plus!!!!
                         string cale = "C:\\POO\\" + to_string(hw.getID()) + "_" + hw.getTitlu();
-                        //sa verific calea aici in plm!!!!
 
                         if (!fs::is_directory(cale.c_str()) || !fs::exists(cale.c_str())) {
                             fs::create_directory(cale.c_str());
@@ -422,7 +457,9 @@ DWORD WINAPI ProcessClient(LPVOID lpParameter)
                         cale = cale + "\\" + user.getUsername() + '.' + string(extensie);
 
 
-                        //aici e send-ul fisierului efectiv, in functie de cale
+                        //char* bufferTest = new char[65536];
+                        //strcpy(bufferTest, "test");
+                        //bufferTest = "test";
                         char buffer[65536];
                         int bytesReceived;
                         ofstream outFile(cale, std::ios::binary);
@@ -432,6 +469,7 @@ DWORD WINAPI ProcessClient(LPVOID lpParameter)
                                 break;
           
                             outFile.write(buffer, bytesReceived);
+                            //delete[] bufferTest;
                             std::cout << "Se primeste..." << endl;
                             Sleep(1);
                         }

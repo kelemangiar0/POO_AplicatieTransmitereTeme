@@ -1,14 +1,16 @@
 ﻿  Database.cpp
+  File.cpp
   Homework.cpp
   serverMain.cpp
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\filesystem(13): warning STL4038: The contents of <filesystem> are available only with C++17 or later.
-C:\Users\kelem\source\repos\Server+DB_Link\Server+DB_Link\serverMain.cpp(16,21): error C2039: 'filesystem': is not a member of 'std'
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\fstream(26,1): message : see declaration of 'std'
-C:\Users\kelem\source\repos\Server+DB_Link\Server+DB_Link\serverMain.cpp(16,31): error C2878: 'filesystem': a namespace or class of this name does not exist
-C:\Users\kelem\source\repos\Server+DB_Link\Server+DB_Link\serverMain.cpp(352,30): error C2653: 'fs': is not a class or namespace name
-C:\Users\kelem\source\repos\Server+DB_Link\Server+DB_Link\serverMain.cpp(352,34): error C3861: 'is_directory': identifier not found
-C:\Users\kelem\source\repos\Server+DB_Link\Server+DB_Link\serverMain.cpp(352,69): error C2653: 'fs': is not a class or namespace name
-C:\Users\kelem\source\repos\Server+DB_Link\Server+DB_Link\serverMain.cpp(352,73): error C3861: 'exists': identifier not found
-C:\Users\kelem\source\repos\Server+DB_Link\Server+DB_Link\serverMain.cpp(353,29): error C2653: 'fs': is not a class or namespace name
-C:\Users\kelem\source\repos\Server+DB_Link\Server+DB_Link\serverMain.cpp(353,33): error C3861: 'create_directory': identifier not found
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.32532\include\filesystem(13): warning STL4038: The contents of <filesystem> are available only with C++17 or later.
+C:\Users\kelem\source\repos\Server+DB_Link\Server+DB_Link\serverMain.cpp(15,21): error C2039: 'filesystem': is not a member of 'std'
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.32532\include\fstream(26,1): message : see declaration of 'std'
+C:\Users\kelem\source\repos\Server+DB_Link\Server+DB_Link\serverMain.cpp(15,31): error C2878: 'filesystem': a namespace or class of this name does not exist
+C:\Users\kelem\source\repos\Server+DB_Link\Server+DB_Link\serverMain.cpp(279,53): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\kelem\source\repos\Server+DB_Link\Server+DB_Link\serverMain.cpp(414,30): error C2653: 'fs': is not a class or namespace name
+C:\Users\kelem\source\repos\Server+DB_Link\Server+DB_Link\serverMain.cpp(414,34): error C3861: 'is_directory': identifier not found
+C:\Users\kelem\source\repos\Server+DB_Link\Server+DB_Link\serverMain.cpp(414,65): error C2653: 'fs': is not a class or namespace name
+C:\Users\kelem\source\repos\Server+DB_Link\Server+DB_Link\serverMain.cpp(414,69): error C3861: 'exists': identifier not found
+C:\Users\kelem\source\repos\Server+DB_Link\Server+DB_Link\serverMain.cpp(415,29): error C2653: 'fs': is not a class or namespace name
+C:\Users\kelem\source\repos\Server+DB_Link\Server+DB_Link\serverMain.cpp(415,33): error C3861: 'create_directory': identifier not found
   User.cpp
