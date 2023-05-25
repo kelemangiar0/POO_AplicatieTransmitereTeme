@@ -31,7 +31,7 @@ afterlogin::afterlogin(QWidget *parent) :
     ui->statusLabel->hide();
     ui->titleLabel->hide();
     ui->groupLabel->hide();
-
+    ui->termLabel->hide();
     ui->reviewButton->hide();
 }
 
@@ -43,25 +43,17 @@ void afterlogin::setUsername(QString newusername)
 }
 
 
-
 void afterlogin::on_toolButton_clicked()
 {
-
-
     send(this->ConnectSocket, "logout",50, 0);
      parinte->show();
      this->deleteLater();
-
 }
 
 afterlogin::~afterlogin()
 {
     delete ui;
 }
-
-
-
-
 
 void afterlogin::addTitlesToWidget(QList<QString>& obj)
 {
@@ -74,10 +66,12 @@ void afterlogin::addTitlesToWidget(QList<QString>& obj)
 void afterlogin::on_homeworksWidget_itemClicked(QListWidgetItem *item)
 {
     ui->uploadButton->hide();
+
     ui->idLabel->show();
     ui->statusLabel->show();
     ui->titleLabel->show();
     ui->groupLabel->show();
+    ui->termLabel->show();
 
 
     ui->detailsWidget->clear();
@@ -85,50 +79,58 @@ void afterlogin::on_homeworksWidget_itemClicked(QListWidgetItem *item)
     ui->homeworksWidget->move(105, 130);
 
     QString status;
+    QString gradeString;
     for(auto& it : homeworksdetails)
     {
         if(it.contains(item->text()))
         {
+            //QString str = "56 Titlu2 C112C 2023-05-25 0.00 Incomplet";
+            QStringList words = it.split(" ");
 
-            int lastSpaceIndex = it.lastIndexOf(" ");
-             status = it.mid(lastSpaceIndex + 1);
+            QString homeworkString = "Homework ID: " + words.at(0);
+            QString titleString    = "Title: " + words.at(1);
+            QString groupString    = "Group: " + words.at(2);
+            QString termString     = "Term: " + words.at(3);
+            gradeString    = "Grade: " + words.at(4);
+            QString statusString   = "Status: " + words.at(5);
 
+            status = words.at(5);
 
-            int firstSpaceIndex = it.indexOf(" ");
-            QString firstWord = it.left(firstSpaceIndex);
-            QString idlabeltext = "Homework ID: ";
-            idlabeltext += firstWord;
-            ui->idLabel->setText(idlabeltext); // homework id
+            ui->idLabel->setText(homeworkString);
+            ui->titleLabel->setText(titleString);
+            ui->groupLabel->setText(groupString);
+            ui->termLabel->setText(termString);
 
-
-             lastSpaceIndex = it.lastIndexOf(" ");
-            if (lastSpaceIndex != -1) {
-                int secondLastSpaceIndex = it.lastIndexOf(" ", lastSpaceIndex - 1);
-                if (secondLastSpaceIndex != -1) {
-                    QString secondLastWord = it.mid(secondLastSpaceIndex + 1, lastSpaceIndex - secondLastSpaceIndex - 1);
-
-                    QString text = "Term: " + secondLastWord;
-                }
-            }
+            ui->statusLabel->setText(statusString);
+            gradeString = words.at(4);
 
             break;
         }
     }
+    ui->reviewButton->setText("Waiting for review");
+    //ui->reviewButton->setStyleSheet();
     if(status == "Incomplet")
-    { ui->uploadButton->show();
+    {
       ui->chooseButton->show();
       ui->reviewButton->hide();
     }
     else
     {
-    ui->uploadButton->hide();
-    ui->chooseButton->hide();
-    ui->reviewButton->show();
+        ui->uploadButton->hide();
+        ui->chooseButton->hide();
+        ui->reviewButton->show();
+
+        if(gradeString != "0.00")
+        {
+            QString gradeText("Grade received! ");
+            gradeText = gradeText + gradeString + "/10";
+            ui->reviewButton->setText(gradeText);
+        }
     }
 
 
     QString newstatus = "Status: " + status;
-    ui->statusLabel->setText(newstatus); // status
+    ui->statusLabel->setText(newstatus);
 
 
 
@@ -136,6 +138,7 @@ void afterlogin::on_homeworksWidget_itemClicked(QListWidgetItem *item)
 
 void afterlogin::on_chooseButton_clicked()
 {
+
     QString fileName = QFileDialog::getOpenFileName(this, tr("Select file"), "/", tr("All Files (*)"));
         if (!fileName.isEmpty()) {
 
@@ -157,6 +160,7 @@ void afterlogin::on_uploadButton_clicked()
 
             //send la hwID
             QString str = ui->idLabel->text();
+            qDebug () << str;
             int firstSpaceIndex = str.indexOf(" ");
             if (firstSpaceIndex != -1) {
             int secondSpaceIndex = str.indexOf(" ", firstSpaceIndex + 1);

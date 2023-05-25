@@ -10,6 +10,12 @@
     <height>732</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>1280</width>
+    <height>732</height>
+   </size>
+  </property>
   <property name="maximumSize">
    <size>
     <width>1280</width>
@@ -320,6 +326,19 @@ QPushButton:hover {
     </property>
     <property name="text">
      <string>Waiting for review</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="termLabel">
+    <property name="geometry">
+     <rect>
+      <x>710</x>
+      <y>280</y>
+      <width>301</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Term:</string>
     </property>
    </widget>
   </widget>

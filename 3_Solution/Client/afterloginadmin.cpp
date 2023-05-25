@@ -58,7 +58,7 @@ void afterloginadmin::on_modifyButton_clicked()
         QList<QString> stringlist;
         char numberAccounts[DEFAULT_BUFFLEN];
         recv(ConnectSocket, numberAccounts, DEFAULT_BUFFLEN, 0);
-        qDebug() << atoi(numberAccounts);
+
         for(int i=0; i<atoi(numberAccounts); i++)
         {
             char usernamebuffer[DEFAULT_BUFFLEN];

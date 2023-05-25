@@ -1,3 +1,6 @@
+#define WIN32_LEAN_AND_MEAN
+#define _CRT_SECURE_NO_WARNINGS
+
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include <ui_mainwindow.h>
@@ -9,8 +12,6 @@
 #include "updateuser.h"
 #include "viewhomework.h"
 
-#define WIN32_LEAN_AND_MEAN
-#define _CRT_SECURE_NO_WARNINGS
 
 #include<iostream>
 using namespace std;
@@ -183,29 +184,33 @@ int MainWindow::on_loginButton_clicked()
     }
 
 
-// test server
+
     printf("CLIENT\n\n\n");
 
     SOCKET ConnectSocket = INVALID_SOCKET;
 
-    char** vec = (char**)malloc(sizeof(char*)* 2 );
-    for(int i = 0 ; i<2; i++)
-        vec[i] = (char*)malloc(sizeof(char)*20);
 
+    char** vec = new char*[2];
+
+    for(int i = 0 ; i<2; i++)
+     vec[i] = new char[20];
+     //strcpy_s(vec[0], strlen(vec[0])+1, "DEFAULT");
+     //strcpy_s(vec[1], strlen(vec[1])+1, "192.168.16.103");
     strcpy(vec[0], "0");
-    strcpy(vec[1], "192.168.181.225");
+    strcpy(vec[1], "192.168.8.103");
+
     ConnectSocket = initialiseConnection(2, vec);
 
     int iResult = 0;
 
     char serverResponse[DEFAULT_BUFFLEN];
 
-againLogin:
+
     QString username1 = ui->userlineEdit->text();
     QString password1 = ui->passlineEdit->text();
-    //aici face din nou cu cele de la inceput,trebuie mutate aici, dupa again login
-    send(ConnectSocket, username1.toLocal8Bit().data(), username1.toStdString().size()+1, 0);
-    send(ConnectSocket, password1.toLocal8Bit().data(), password1.size()+1, 0);
+
+    send(ConnectSocket, username1.toLocal8Bit(), username1.size()+1, 0);
+    send(ConnectSocket, password1.toLocal8Bit(), password1.size()+1, 0);
 
 
     recv(ConnectSocket, serverResponse, DEFAULT_BUFFLEN, 0);
@@ -221,7 +226,7 @@ againLogin:
         // numar studenti, iar pt fiecare idtema, titlu, grupa, termen limita, status (Complet sau Incomplet)
 
 
-        QList<QString> detailslist;
+
         QList<QString> titleslist;
         char numberStudents[DEFAULT_BUFFLEN];
         recv(ConnectSocket, numberStudents, DEFAULT_BUFFLEN, 0);
@@ -233,7 +238,7 @@ againLogin:
             char group_buffer[DEFAULT_BUFFLEN];
             char term_buffer[DEFAULT_BUFFLEN];
             char status_buffer[DEFAULT_BUFFLEN];
-
+            char grade_buffer[DEFAULT_BUFFLEN];
               recv(ConnectSocket, homeworkid_buffer, DEFAULT_BUFFLEN, 0);
              Sleep(1);
               recv(ConnectSocket, title_buffer, DEFAULT_BUFFLEN, 0);
@@ -244,14 +249,17 @@ againLogin:
               Sleep(1);
               recv(ConnectSocket, status_buffer, DEFAULT_BUFFLEN, 0);
               Sleep(1);
-
+              recv(ConnectSocket, grade_buffer, DEFAULT_BUFFLEN, 0);
+              Sleep(1);
               QString homeworkid_string(homeworkid_buffer);
               QString title_string(title_buffer);
               QString group_string(group_buffer);
               QString term_string(term_buffer);
               QString status_string(status_buffer);
               titleslist.push_back(title_string);
-              QString finalstring = homeworkid_string + ' ' + title_string + ' ' + group_string + ' ' + term_string + ' ' + status_string;
+              QString grade_string(grade_buffer);
+
+              QString finalstring = homeworkid_string + ' ' + title_string + ' ' + group_string + ' ' + term_string + ' ' + status_string + ' ' + grade_string;
               studentafter->addDetails(finalstring);
 
         }
@@ -293,15 +301,12 @@ againLogin:
     if (strcmp(serverResponse, "incorrectPassword") == 0)
     {
         cout << "Incorrect password! Try again..." << endl;
-        goto againLogin;
+
     }
     if (strcmp(serverResponse, "userNotFound") == 0)
     {
         cout << "User not into database. Contact admin, then try again..." << endl;
     }
-
-   //closesocket(ConnectSocket); //aici imi inchide socketul
-   // WSACleanup();
 
 
 

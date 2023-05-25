@@ -62,8 +62,6 @@ void updateuser::setWidgetItems(QList<QString>& newqwidgetitems)
 
 void updateuser::on_updatebutton_clicked()
 {
-
-
     QString password = ui->passwordlineedit->text();
     QString group    = ui->grouplineedit->text();
 
@@ -91,6 +89,5 @@ void updateuser::on_pushButton_clicked()
     ptr->show();
     this->deleteLater();
     send(ConnectSocket, "back", DEFAULT_BUFFLEN, 0);
-
 }
 

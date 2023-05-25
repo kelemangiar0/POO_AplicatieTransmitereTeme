@@ -1,16 +1,12 @@
 #ifndef UPDATEUSER_H
 #define UPDATEUSER_H
+#define WIN32_LEAN_AND_MEAN
+#define _CRT_SECURE_NO_WARNINGS
 #include "afterloginadmin.h"
 #include <QMainWindow>
 #include <qlistwidget.h>
 #include <vector>
-
-
-#define WIN32_LEAN_AND_MEAN
-#define _CRT_SECURE_NO_WARNINGS
-
 #include<iostream>
-
 #include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
@@ -40,12 +36,8 @@ public:
 
 private slots:
     void on_item_clicked(QListWidgetItem *item);
-
-
     void on_updatebutton_clicked();
-
     void on_pushButton_clicked();
-
 private:
     afterloginadmin* ptr;
     Ui::updateuser *ui;

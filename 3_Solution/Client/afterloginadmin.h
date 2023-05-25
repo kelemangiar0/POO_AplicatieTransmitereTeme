@@ -1,23 +1,19 @@
 #ifndef AFTERLOGINADMIN_H
 #define AFTERLOGINADMIN_H
 
-#include <QMainWindow>
-#include <QLabel>
-#include "mainwindow.h"
-
 #define WIN32_LEAN_AND_MEAN
 #define _CRT_SECURE_NO_WARNINGS
 
-#include<iostream>
-using namespace std;
-
+#include <QMainWindow>
+#include <QLabel>
+#include "mainwindow.h"
 #include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <stdlib.h>
 #include <stdio.h>
-
-
+#include<iostream>
+using namespace std;
 
 #pragma comment (lib, "Ws2_32.lib")
 #pragma comment (lib, "Mswsock.lib")

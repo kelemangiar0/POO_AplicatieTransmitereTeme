@@ -1,9 +1,6 @@
 #ifndef DELETEUSER_H
 #define DELETEUSER_H
 
-#include <QMainWindow>
-#include "afterloginadmin.h"
-#include <qlistwidget.h>
 #define WIN32_LEAN_AND_MEAN
 #define _CRT_SECURE_NO_WARNINGS
 
@@ -12,6 +9,10 @@
 #include <ws2tcpip.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <QMainWindow>
+#include "afterloginadmin.h"
+#include <qlistwidget.h>
+
 
 #pragma comment (lib, "Ws2_32.lib")
 #pragma comment (lib, "Mswsock.lib")

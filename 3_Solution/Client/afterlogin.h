@@ -1,24 +1,21 @@
 #ifndef AFTERLOGIN_H
 #define AFTERLOGIN_H
 
-#include <QMainWindow>
-#include <QLabel>
-#include "mainwindow.h"
-#include <QListWidget>
-#include <QList>
 #define WIN32_LEAN_AND_MEAN
 #define _CRT_SECURE_NO_WARNINGS
-
-#include<iostream>
-using namespace std;
 
 #include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <stdlib.h>
 #include <stdio.h>
-
-
+#include <QMainWindow>
+#include <QLabel>
+#include "mainwindow.h"
+#include <QListWidget>
+#include <QList>
+#include<iostream>
+using namespace std;
 
 #pragma comment (lib, "Ws2_32.lib")
 #pragma comment (lib, "Mswsock.lib")
@@ -38,7 +35,7 @@ private:
     QString m_username;
     QString m_filePath;
     QList<QString> homeworksdetails;
-
+    QString gradeString;
 
   public:
     SOCKET ConnectSocket;
@@ -51,11 +48,7 @@ private:
     void addTitlesToWidget(QList<QString>& obj);
     void addDetails(QString detail) {homeworksdetails.push_back(detail);}
 private slots:
-
-
     void on_toolButton_clicked();
-
-
     void on_homeworksWidget_itemClicked(QListWidgetItem *item);
     void on_chooseButton_clicked();
     void on_uploadButton_clicked();

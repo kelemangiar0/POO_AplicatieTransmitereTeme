@@ -1,8 +1,5 @@
 #ifndef CREATEHOMEWORK_H
 #define CREATEHOMEWORK_H
-
-#include <QMainWindow>
-
 #define WIN32_LEAN_AND_MEAN
 #define _CRT_SECURE_NO_WARNINGS
 #include "afterloginprofessor.h"
@@ -11,7 +8,7 @@
 #include <ws2tcpip.h>
 #include <stdlib.h>
 #include <stdio.h>
-
+#include <QMainWindow>
 
 #pragma comment (lib, "Ws2_32.lib")
 #pragma comment (lib, "Mswsock.lib")

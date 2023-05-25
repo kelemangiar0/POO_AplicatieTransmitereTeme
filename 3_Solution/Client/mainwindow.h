@@ -1,21 +1,20 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-#include "afterlogin.h"
-#include "afterloginadmin.h"
-#include "afterloginprofessor.h"
-#include <QMainWindow>
 
 #define WIN32_LEAN_AND_MEAN
 #define _CRT_SECURE_NO_WARNINGS
 
-#include<iostream>
-using namespace std;
-
+#include "afterlogin.h"
+#include "afterloginadmin.h"
+#include "afterloginprofessor.h"
+#include <QMainWindow>
 #include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include<iostream>
+using namespace std;
 
 
 #pragma comment (lib, "Ws2_32.lib")
