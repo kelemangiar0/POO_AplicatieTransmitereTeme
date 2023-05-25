@@ -4,6 +4,8 @@
 #include <QStringList>
 #include <fstream>
 #define DEFAULT_BUFFLEN 512
+
+
 viewhomework::viewhomework(QWidget *parent, QList<QString>& list) :
     QMainWindow(parent),
     ui(new Ui::viewhomework)
@@ -20,7 +22,6 @@ viewhomework::viewhomework(QWidget *parent, QList<QString>& list) :
     ui->reportButton->hide();
     setHomeworkList(list);
     setWidgetItems(homeworkslist, ui->homeworksWidget);
-
 
 }
 void viewhomework::setHomeworkList(QList<QString>& list)
@@ -49,20 +50,22 @@ void viewhomework::setWidgetItems(QList<QString>& newqwidgetitems, QListWidget*&
 
 void viewhomework::on_homeworksWidget_itemClicked(QListWidgetItem *item)
 {
-    char statusbuffer[DEFAULT_BUFFLEN];
     ui->reportButton->hide();
+    ui->downloadButton->hide();
+    ui->markButton->hide();
+    ui->gradeLineEdit->hide();
+    ui->reportWidget->hide();
     ui->studentsWidget->show();
     ui->homeworksWidget->move(105, 130);
     ui->selecthomeworkLabel->hide();
-    ui->downloadButton->hide();
-    ui->markButton->hide();
-    ui->reportWidget->hide();
-    ui->reportWidget->clear();
-    ui->gradeLineEdit->hide();
+
+
+
     ui->gradeLineEdit->setText("Grade");
+    ui->reportWidget->clear();
     ui->studentsWidget->clear();
     QString text = item->text();
-    QStringList words = text.split(" "); // Impartim textul in cuvinte
+    QStringList words = text.split(" ");
     QString firstWord = words[0];
 
       // numar, user, grupa, status
@@ -73,11 +76,11 @@ void viewhomework::on_homeworksWidget_itemClicked(QListWidgetItem *item)
     char numberStudents[DEFAULT_BUFFLEN];
     recv(ConnectSocket, numberStudents, DEFAULT_BUFFLEN, 0);
 
+    char usernamebuffer[DEFAULT_BUFFLEN];
+    char groupbuffer[DEFAULT_BUFFLEN];
+    char statusbuffer[DEFAULT_BUFFLEN];
     for(int i =0; i< atoi(numberStudents); i++)
     {
-        char usernamebuffer[DEFAULT_BUFFLEN];
-        char groupbuffer[DEFAULT_BUFFLEN];
-        char statusbuffer[DEFAULT_BUFFLEN];
 
         recv(ConnectSocket, usernamebuffer, DEFAULT_BUFFLEN, 0);
         Sleep(1);
@@ -92,17 +95,30 @@ void viewhomework::on_homeworksWidget_itemClicked(QListWidgetItem *item)
         QString finalstring = usernamestring + ' ' + groupstring + ' ' + statusstring;
         ui->studentsWidget->addItem(finalstring);
     }
-
-
     recv(ConnectSocket, statusbuffer, 15, 0);
     Sleep(10);
-    //send(ConnectSocket,  this->homeworkID.toLocal8Bit(), DEFAULT_BUFFLEN, 0);
+
 
     QString status(statusbuffer);
     if(status != "cannotGenerate")
     {
         ui->reportButton->show();
     }
+
+    QString selectedText = ui->homeworksWidget->currentItem()->text();
+    if(selectedText.contains("Expired"))
+    {
+        for(int i = 0; i<ui->studentsWidget->count(); i++)
+        {
+            QString studentDetails = ui->studentsWidget->item(i)->text();
+
+            if(studentDetails.contains("Incomplet"))
+            {
+                ui->studentsWidget->item(i)->setBackground(QBrush(QColor('red')));
+
+            }
+        }
+}
 
 }
 
@@ -132,10 +148,11 @@ void viewhomework::on_studentsWidget_itemClicked(QListWidgetItem *item)
         ui->downloadButton->hide();
         ui->gradeLineEdit->hide();
         ui->markButton->hide();
+
+
     }
-
-
 }
+
 
 
 void viewhomework::on_backButton_clicked()
@@ -185,7 +202,7 @@ void viewhomework::on_downloadButton_clicked()
 
 
     outFile.close();
-   // recv(ConnectSocket, buffer, sizeof(buffer), 0);
+
     qDebug() << "s-a primit";
 }
 
@@ -239,7 +256,7 @@ void viewhomework::on_reportButton_clicked()
     text+=averageItem;
 
     ui->reportWidget->addItem(text);
-    // afisare stil kennedy : Nume-Prenume : nota \n Medie grupa : medie
+
 
 }
 

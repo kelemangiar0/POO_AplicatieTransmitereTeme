@@ -32,11 +32,8 @@ public:
 
 private slots:
     void on_backButton_clicked();
-
     void on_dateButton_clicked();
-
     void on_calendarWidget_selectionChanged();
-
     void on_createButton_clicked();
 
 private:

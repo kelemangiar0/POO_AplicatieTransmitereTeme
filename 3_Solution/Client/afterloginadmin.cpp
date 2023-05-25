@@ -6,7 +6,6 @@
 #include "createuser.h"
 #include "updateuser.h"
 #include "deleteuser.h"
-#include <QDebug>
 #include <list>
 #define DEFAULT_BUFFLEN 512
 
@@ -59,12 +58,12 @@ void afterloginadmin::on_modifyButton_clicked()
         char numberAccounts[DEFAULT_BUFFLEN];
         recv(ConnectSocket, numberAccounts, DEFAULT_BUFFLEN, 0);
 
+        char usernamebuffer[DEFAULT_BUFFLEN];
+        char passwordbuffer[DEFAULT_BUFFLEN];
+        char typebuffer[DEFAULT_BUFFLEN];
+        char groupbuffer[DEFAULT_BUFFLEN];
         for(int i=0; i<atoi(numberAccounts); i++)
         {
-            char usernamebuffer[DEFAULT_BUFFLEN];
-            char passwordbuffer[DEFAULT_BUFFLEN];
-            char typebuffer[DEFAULT_BUFFLEN];
-            char groupbuffer[DEFAULT_BUFFLEN];
 
             recv(ConnectSocket, usernamebuffer, DEFAULT_BUFFLEN, 0);
             Sleep(1);
@@ -103,13 +102,14 @@ void afterloginadmin::on_deleteButton_clicked()
         QList<QString> stringlist;
         char numberAccounts[DEFAULT_BUFFLEN];
         recv(ConnectSocket, numberAccounts, DEFAULT_BUFFLEN, 0);
-        qDebug() << atoi(numberAccounts);
+
+
+        char usernamebuffer[DEFAULT_BUFFLEN];
+        char passwordbuffer[DEFAULT_BUFFLEN];
+        char typebuffer[DEFAULT_BUFFLEN];
+        char groupbuffer[DEFAULT_BUFFLEN];
         for(int i=0; i<atoi(numberAccounts); i++)
         {
-              char usernamebuffer[DEFAULT_BUFFLEN];
-              char passwordbuffer[DEFAULT_BUFFLEN];
-              char typebuffer[DEFAULT_BUFFLEN];
-              char groupbuffer[DEFAULT_BUFFLEN];
 
               recv(ConnectSocket, usernamebuffer, DEFAULT_BUFFLEN, 0);
               Sleep(1);

@@ -34,9 +34,7 @@ public:
 
 private slots:
     void on_logoutButton_clicked();
-
     void on_createButton_clicked();
-
     void on_viewButton_clicked();
 
 private:

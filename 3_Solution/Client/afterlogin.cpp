@@ -3,12 +3,9 @@
 #include "./ui_afterlogin.h"
 #include <QLabel>
 #include <QEvent>
-
 #include <QFileDialog>
 #include <QPushButton>
-
 #include <QListWidgetItem>
-
 #include <fstream>
 
 #define DEFAULT_BUFFLEN 512
@@ -80,21 +77,19 @@ void afterlogin::on_homeworksWidget_itemClicked(QListWidgetItem *item)
 
     QString status;
     QString gradeString;
+
     for(auto& it : homeworksdetails)
     {
-        if(it.contains(item->text()))
-        {
-            //QString str = "56 Titlu2 C112C 2023-05-25 0.00 Incomplet";
+        if (it.contains(item->text())) {
             QStringList words = it.split(" ");
-
             QString homeworkString = "Homework ID: " + words.at(0);
-            QString titleString    = "Title: " + words.at(1);
-            QString groupString    = "Group: " + words.at(2);
-            QString termString     = "Term: " + words.at(3);
-            gradeString    = "Grade: " + words.at(4);
-            QString statusString   = "Status: " + words.at(5);
 
-            status = words.at(5);
+            QString titleString = "Title: " + words.mid(1, words.length() - 5).join(" ");
+            QString groupString = "Group: " + words.at(words.length() - 4);
+            QString termString = "Term: " + words.at(words.length() - 3);
+            gradeString = "Grade: " + words.at(words.length() - 2);
+            QString statusString = "Status: " + words.at(words.length() - 1);
+            status = words.at(words.length() - 1);
 
             ui->idLabel->setText(homeworkString);
             ui->titleLabel->setText(titleString);
@@ -102,13 +97,13 @@ void afterlogin::on_homeworksWidget_itemClicked(QListWidgetItem *item)
             ui->termLabel->setText(termString);
 
             ui->statusLabel->setText(statusString);
-            gradeString = words.at(4);
+            gradeString = words.at(words.length() - 2);
 
             break;
         }
     }
     ui->reviewButton->setText("Waiting for review");
-    //ui->reviewButton->setStyleSheet();
+
     if(status == "Incomplet")
     {
       ui->chooseButton->show();
@@ -125,13 +120,13 @@ void afterlogin::on_homeworksWidget_itemClicked(QListWidgetItem *item)
             QString gradeText("Grade received! ");
             gradeText = gradeText + gradeString + "/10";
             ui->reviewButton->setText(gradeText);
+
         }
     }
 
 
     QString newstatus = "Status: " + status;
     ui->statusLabel->setText(newstatus);
-
 
 
  }
@@ -160,7 +155,7 @@ void afterlogin::on_uploadButton_clicked()
 
             //send la hwID
             QString str = ui->idLabel->text();
-            qDebug () << str;
+
             int firstSpaceIndex = str.indexOf(" ");
             if (firstSpaceIndex != -1) {
             int secondSpaceIndex = str.indexOf(" ", firstSpaceIndex + 1);

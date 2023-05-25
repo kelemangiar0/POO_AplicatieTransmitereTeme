@@ -6,21 +6,17 @@
 #include <ui_mainwindow.h>
 #include <QEvent>
 #include <QLineEdit>
-
-
-
-#include "updateuser.h"
-#include "viewhomework.h"
-
-
-#include<iostream>
-using namespace std;
-
 #include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "updateuser.h"
+#include "viewhomework.h"
+#include <iostream>
+
+
+using namespace std;
 
 
 
@@ -119,50 +115,7 @@ SOCKET initialiseConnection(int argc, char** argv)
     return ConnectSocket;
 }
 
-void createUser(SOCKET *ConnectSocket)
-{
-    cout << "Insert new username:";
-    string username;
-    cin >> username;
-    send(*ConnectSocket, username.c_str(), DEFAULT_BUFFLEN, 0);
-    cout << "Insert new password:";
-    string password;
-    cin >> password;
-    send(*ConnectSocket, password.c_str(), DEFAULT_BUFFLEN, 0);
-    cout << "Insert new type of user:";
-    string type;
-    cin >> type;
-    send(*ConnectSocket, type.c_str(), DEFAULT_BUFFLEN, 0);
 
-    string grupa;
-    if (type == "student")
-    {
-        cout << "Insert group for student:";
-        cin >> grupa;
-    }
-    else
-        grupa = "NULL";
-    send(*ConnectSocket, grupa.c_str(), DEFAULT_BUFFLEN, 0);
-}
-void deleteUser(SOCKET *ConnectSocket)
-{
-    string user;
-    cout << "User to delete (insert username):";
-    cin >> user;
-    send(*ConnectSocket, user.c_str(), DEFAULT_BUFFLEN, 0);
-}
-void createHomework(SOCKET* ConnectSocket)
-{
-    string grupa;
-    cout << "Introduceti grupa:";
-    cin >> grupa;
-    send(*ConnectSocket, grupa.c_str(), DEFAULT_BUFFLEN, 0);
-
-    string termenLimita;
-    cout << "Introduceti termenul limita:";
-    cin >> termenLimita;
-    send(*ConnectSocket, termenLimita.c_str(), DEFAULT_BUFFLEN, 0);
-}
 
 int MainWindow::on_loginButton_clicked()
 {
@@ -191,18 +144,16 @@ int MainWindow::on_loginButton_clicked()
 
 
     char** vec = new char*[2];
-
     for(int i = 0 ; i<2; i++)
      vec[i] = new char[20];
-     //strcpy_s(vec[0], strlen(vec[0])+1, "DEFAULT");
-     //strcpy_s(vec[1], strlen(vec[1])+1, "192.168.16.103");
     strcpy(vec[0], "0");
     strcpy(vec[1], "192.168.8.103");
-
     ConnectSocket = initialiseConnection(2, vec);
 
+    for(int i  = 0; i<2; i++)
+     delete[] vec[i];
+    delete[] vec;
     int iResult = 0;
-
     char serverResponse[DEFAULT_BUFFLEN];
 
 
@@ -217,28 +168,23 @@ int MainWindow::on_loginButton_clicked()
 
     if (strcmp(serverResponse, "studentLogin") == 0)
     {
-        //to be continued
         cout << "Welcome, student!" << endl;
-
         studentafter = new afterlogin(this);
         studentafter->setParent(this);
-
         // numar studenti, iar pt fiecare idtema, titlu, grupa, termen limita, status (Complet sau Incomplet)
-
-
-
         QList<QString> titleslist;
         char numberStudents[DEFAULT_BUFFLEN];
         recv(ConnectSocket, numberStudents, DEFAULT_BUFFLEN, 0);
 
+        char homeworkid_buffer[DEFAULT_BUFFLEN];
+        char title_buffer[DEFAULT_BUFFLEN];
+        char group_buffer[DEFAULT_BUFFLEN];
+        char term_buffer[DEFAULT_BUFFLEN];
+        char status_buffer[DEFAULT_BUFFLEN];
+        char grade_buffer[DEFAULT_BUFFLEN];
         for(int i = 0; i < atoi(numberStudents); i++)
         {
-            char homeworkid_buffer[DEFAULT_BUFFLEN];
-            char title_buffer[DEFAULT_BUFFLEN];
-            char group_buffer[DEFAULT_BUFFLEN];
-            char term_buffer[DEFAULT_BUFFLEN];
-            char status_buffer[DEFAULT_BUFFLEN];
-            char grade_buffer[DEFAULT_BUFFLEN];
+
               recv(ConnectSocket, homeworkid_buffer, DEFAULT_BUFFLEN, 0);
              Sleep(1);
               recv(ConnectSocket, title_buffer, DEFAULT_BUFFLEN, 0);

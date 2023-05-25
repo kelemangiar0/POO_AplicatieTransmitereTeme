@@ -39,7 +39,6 @@ private:
     QMainWindow* parinte;
 private slots:
     void on_toolButton_clicked();
-
     void on_creationButton_clicked();
     void on_modifyButton_clicked();
     void on_deleteButton_clicked();

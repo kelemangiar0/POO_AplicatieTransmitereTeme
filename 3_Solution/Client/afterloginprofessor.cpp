@@ -80,7 +80,15 @@ void afterloginprofessor::on_viewButton_clicked()
 
         qint64 daysDifference = currentDate.daysTo(futureDate);
 
+
         QString daysDifferenceString = QString::number(daysDifference) + " days left";
+
+
+        if(daysDifference<0)
+        {
+            daysDifferenceString  = "Expired";
+        }
+
         QString finalstring = idstring + ' ' + groupstring +  ' ' + titlestring + ' ' + daysDifferenceString;
         homeworkslist.push_back(finalstring);
     }

@@ -67,7 +67,7 @@ void updateuser::on_updatebutton_clicked()
 
     if(group == " ")
     {
-      send(ConnectSocket, this->stringul.toLocal8Bit(), DEFAULT_BUFFLEN, 0);
+          send(ConnectSocket, this->stringul.toLocal8Bit(), DEFAULT_BUFFLEN, 0);
           send(ConnectSocket, password.toLocal8Bit(), DEFAULT_BUFFLEN, 0);
           send(ConnectSocket, NULL, DEFAULT_BUFFLEN, 0);
 
