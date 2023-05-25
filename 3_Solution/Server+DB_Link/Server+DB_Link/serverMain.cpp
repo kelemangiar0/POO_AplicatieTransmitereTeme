@@ -9,7 +9,6 @@
 #include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
-//#include <stdlib.h>
 #include <cstdlib>
 #include <filesystem>
 using namespace std;
@@ -51,7 +50,7 @@ void createUser(SOCKET* AcceptSocket)
         c = std::toupper(c);
     }
   
-    User newUser{ username,password,type,standardGrupa.c_str()};
+    User newUser( username,password,type,standardGrupa.c_str());
     if (db.createUser(newUser)) {
         std::cout << "Admin created user..." << endl;
     }
@@ -69,15 +68,15 @@ void deleteUser(SOCKET* AcceptSocket)
     for (int i = 0; i < db.getNumberOfAccounts(); i++)
     {
         User user = db.getUsernameFromIndex(i);
-        vector<User> toSend = db.getUserByUsername(user.username);
+        vector<User> toSend = db.getUserByUsername(user.getUsername());
 
-        send(*AcceptSocket, toSend[0].username.c_str(), DEFAULT_BUFLEN, 0);
+        send(*AcceptSocket, toSend[0].getUsername().c_str(), DEFAULT_BUFLEN, 0);
         Sleep(1);
-        send(*AcceptSocket, toSend[0].parola.c_str(), DEFAULT_BUFLEN, 0);
+        send(*AcceptSocket, toSend[0].getParola().c_str(), DEFAULT_BUFLEN, 0);
         Sleep(1);
-        send(*AcceptSocket, toSend[0].tipCont.c_str(), DEFAULT_BUFLEN, 0);
+        send(*AcceptSocket, toSend[0].getTipCont().c_str(), DEFAULT_BUFLEN, 0);
         Sleep(1);
-        send(*AcceptSocket, toSend[0].grupaStudii.c_str(), DEFAULT_BUFLEN, 0);
+        send(*AcceptSocket, toSend[0].getGrupaStudii().c_str(), DEFAULT_BUFLEN, 0);
         Sleep(1);
     }
 
@@ -103,15 +102,15 @@ void updateUser(SOCKET* AcceptSocket)
     for (int i = 0; i < db.getNumberOfAccounts(); i++)
     {
         User user = db.getUsernameFromIndex(i);
-        vector<User> toSend = db.getUserByUsername(user.username);
+        vector<User> toSend = db.getUserByUsername(user.getUsername());
         
-        send(*AcceptSocket, toSend[0].username.c_str(), DEFAULT_BUFLEN, 0);
+        send(*AcceptSocket, toSend[0].getUsername().c_str(), DEFAULT_BUFLEN, 0);
         Sleep(1);
-        send(*AcceptSocket, toSend[0].parola.c_str(), DEFAULT_BUFLEN, 0);
+        send(*AcceptSocket, toSend[0].getParola().c_str(), DEFAULT_BUFLEN, 0);
         Sleep(1);
-        send(*AcceptSocket, toSend[0].tipCont.c_str(), DEFAULT_BUFLEN, 0);
+        send(*AcceptSocket, toSend[0].getTipCont().c_str(), DEFAULT_BUFLEN, 0);
         Sleep(1);
-        send(*AcceptSocket, toSend[0].grupaStudii.c_str(), DEFAULT_BUFLEN, 0);
+        send(*AcceptSocket, toSend[0].getGrupaStudii().c_str(), DEFAULT_BUFLEN, 0);
         Sleep(1);
     }
     //
@@ -149,7 +148,7 @@ void createHomework(SOCKET* AcceptSocket)
     for (auto& c : standardGrupa)
         c = std::toupper(c);
 
-    Homework newHomework{0, standardGrupa.c_str(), data, titlu};
+    Homework newHomework(0, standardGrupa.c_str(), data, titlu);
     db.createHomework(newHomework);
 }
 void viewStudentsAssignedToHomework(SOCKET* AcceptSocket)
@@ -164,20 +163,20 @@ void viewStudentsAssignedToHomework(SOCKET* AcceptSocket)
         Homework hw = db.getHomeworkFromIndex(i);
        
         strcpy(buf, " ");
-        send(*AcceptSocket, _itoa(hw.id,buf,10), DEFAULT_BUFLEN, 0);
+        send(*AcceptSocket, _itoa(hw.getID(), buf, 10), DEFAULT_BUFLEN, 0);
         Sleep(1);
-        send(*AcceptSocket, hw.grupa.c_str(), DEFAULT_BUFLEN, 0);
+        send(*AcceptSocket, hw.getGrupa().c_str(), DEFAULT_BUFLEN, 0);
         Sleep(1);
-        send(*AcceptSocket, hw.termenLimita.c_str(), DEFAULT_BUFLEN, 0);
+        send(*AcceptSocket, hw.getTermenLimita().c_str(), DEFAULT_BUFLEN, 0);
         Sleep(1);
-        send(*AcceptSocket, hw.titlu.c_str(), DEFAULT_BUFLEN, 0);
+        send(*AcceptSocket, hw.getTitlu().c_str(), DEFAULT_BUFLEN, 0);
         Sleep(1);
     }
 
    //dupa ce serverul a primit toate temele, astept aici ca clientul sa imi raspunda cu id-ul temei la care vrea sa vada statusurile
-
     char homeworkID[DEFAULT_BUFLEN];
     recv(*AcceptSocket, homeworkID, DEFAULT_BUFLEN, 0);
+
 
 showAgain:
 
@@ -190,14 +189,15 @@ showAgain:
 
     send(*AcceptSocket, studentNumber, 10, 0);
 
-    for (const auto& user : students) 
+    for ( auto& user : students) 
     {
         bool status = db.getHomeworkStatus(user, atoi(homeworkID));
 
-        send(*AcceptSocket, user.username.c_str(), DEFAULT_BUFLEN, 0);
+        send(*AcceptSocket, user.getUsername().c_str(), DEFAULT_BUFLEN, 0);
         Sleep(1);
-        send(*AcceptSocket, user.grupaStudii.c_str(), DEFAULT_BUFLEN, 0);
+        send(*AcceptSocket, user.getGrupaStudii().c_str(), DEFAULT_BUFLEN, 0);
         Sleep(1);
+
         //send their status
         if (status)
             send(*AcceptSocket, "Complet", DEFAULT_BUFLEN, 0);
@@ -206,7 +206,21 @@ showAgain:
         Sleep(1);
     }
 
-    //aici sa astept un raspuns de la client, daca vrea sa downloadeze sa ii ofer calea si sa inceapa download-ul
+
+    //trimit verificarea daca se pot genera rapoarte
+    if (!db.generateHomeworkReport(atoi(homeworkID)))
+        send(*AcceptSocket, "cannotGenerate", 15, 0);
+    else 
+        //generarea se face automat in acea metoda
+        send(*AcceptSocket, "can123Generate", 15, 0);
+
+    Sleep(10);
+
+
+
+
+   
+recieveAnotherCommand:
     recv(*AcceptSocket, buf, DEFAULT_BUFLEN, 0);
     if (strcmp(buf, "downloadFromServer") == 0)
     {
@@ -220,11 +234,11 @@ showAgain:
         
         //acum aflu fisierul asociat utilizatorului si temei primite
         File fisierAsociat = db.getFileAssociated(username, homeworkID);
-        send(*AcceptSocket, fisierAsociat.cale.c_str(), DEFAULT_BUFLEN, 0);
+        send(*AcceptSocket, fisierAsociat.getCale().c_str(), DEFAULT_BUFLEN, 0);
 
         
         //incep trimiterea fisierului
-        std::ifstream inFile(fisierAsociat.cale.c_str(), std::ios::binary);
+        std::ifstream inFile(fisierAsociat.getCale().c_str(), std::ios::binary);
         if (!inFile) {  return; }
 
         char buffer[65536];
@@ -238,18 +252,57 @@ showAgain:
                 bytesToWrite++;
             }
             bytesSent = send(*AcceptSocket, buffer, bytesToWrite, 0);
-
+            
             if (bytesSent == SOCKET_ERROR) { return; }
-            Sleep(10);
+            Sleep(1);
         }
-
-        send(*AcceptSocket, "gata", 50, 0);
-        //Sleep(10);
+        Sleep(1000);
+        send(*AcceptSocket, "gata", 5, 0);
+        
         inFile.close();
-        //am terminat uploadarea
+        //am terminat trimiterea fisierului catre profesor
 
 
         std::cout << "Un profesor a descarcat un fisier..." << endl;
+        goto recieveAnotherCommand;
+    }
+    if (strcmp(buf, "marked") == 0)
+    {
+        char user[DEFAULT_BUFLEN], nota[DEFAULT_BUFLEN];
+
+        recv(*AcceptSocket, homeworkID, DEFAULT_BUFLEN, 0);
+        recv(*AcceptSocket, user, DEFAULT_BUFLEN, 0);
+        recv(*AcceptSocket, nota, DEFAULT_BUFLEN, 0);
+        
+        db.markHomework(atoi(homeworkID), user, atof(nota));
+        goto recieveAnotherCommand;
+    }
+    if (strcmp(buf, "generateReport") == 0)
+    {
+        
+        send(*AcceptSocket, studentNumber, 10, 0);
+        Sleep(1);
+        for ( auto& user : students)
+        {
+            send(*AcceptSocket, user.getUsername().c_str(), DEFAULT_BUFLEN, 0);
+            Sleep(1);
+
+            char buffer[DEFAULT_BUFLEN];
+            std::sprintf(buffer, "%.2f", db.getMark(atoi(homeworkID), user));
+            send(*AcceptSocket, buffer, DEFAULT_BUFLEN, 0);
+            Sleep(1);  
+        }
+
+        char buffer[DEFAULT_BUFLEN];
+        std::sprintf(buffer, "%.2f", db.getMedia(atoi(homeworkID)));
+        send(*AcceptSocket, buffer, 10, 0);
+        Sleep(1);
+
+        goto recieveAnotherCommand;
+    }
+    if (strcmp(buf, "back") == 0)
+    {
+        return;
     }
     else
     {
@@ -277,18 +330,26 @@ void seeHomework(SOCKET* AcceptSocket,const User& user)
     {
         
         strcpy(buf, " ");
-        send(*AcceptSocket, _itoa(hw[i].id,buf,10), DEFAULT_BUFLEN, 0);
+        send(*AcceptSocket, _itoa(hw[i].getID(), buf, 10), DEFAULT_BUFLEN, 0);
         Sleep(1);
-        send(*AcceptSocket, hw[i].titlu.c_str(), DEFAULT_BUFLEN, 0);
+        send(*AcceptSocket, hw[i].getTitlu().c_str(), DEFAULT_BUFLEN, 0);
         Sleep(1);
-        send(*AcceptSocket, hw[i].grupa.c_str(), DEFAULT_BUFLEN, 0);
+        send(*AcceptSocket, hw[i].getGrupa().c_str(), DEFAULT_BUFLEN, 0);
         Sleep(1);
-        send(*AcceptSocket, hw[i].termenLimita.c_str(), DEFAULT_BUFLEN, 0);
+        send(*AcceptSocket, hw[i].getTermenLimita().c_str(), DEFAULT_BUFLEN, 0);
         Sleep(1);
         
-
+        //sa trimit catre afisare si nota primita din database
+        char buffer[DEFAULT_BUFLEN];
+        std::sprintf(buffer, "%.2f", db.getMark(hw[i].getID(), user));
+        send(*AcceptSocket, buffer, DEFAULT_BUFLEN, 0);
+        Sleep(1);
+        
+        //aici enat mai trebuie sa faca un recieve de nota si vede el ce face cu ea
+        //face o verificare la nota si in functie de rezultatul primit de el afiseaza waiting sau afiseaza nota
+        
         //char status[DEFAULT_BUFLEN];
-        if (db.getHomeworkStatus(user, hw[i].id) == 1)
+        if (db.getHomeworkStatus(user, hw[i].getID()) == 1)
             send(*AcceptSocket, "Complet", DEFAULT_BUFLEN, 0);
         else 
             send(*AcceptSocket, "Incomplet", DEFAULT_BUFLEN, 0);
@@ -301,38 +362,6 @@ DWORD WINAPI ProcessClient(LPVOID lpParameter)
 {
    
     SOCKET AcceptSocket = (SOCKET)lpParameter;
-    
-
-
-    //int rcvBufferSize;
-    //int rcvBufferLength = sizeof(rcvBufferSize);
-    //if (getsockopt(AcceptSocket, SOL_SOCKET, SO_RCVBUF, reinterpret_cast<char*>(&rcvBufferSize), &rcvBufferLength) == SOCKET_ERROR)
-    //{
-    //    std::cerr << "Failed to retrieve receive buffer size." << std::endl;
-    //    closesocket(AcceptSocket);
-    //    WSACleanup();
-    //    return 1;
-    //}
-
-    //// Retrieve the send buffer size
-    //int sndBufferSize;
-    //int sndBufferLength = sizeof(sndBufferSize);
-    //if (getsockopt(AcceptSocket, SOL_SOCKET, SO_SNDBUF, reinterpret_cast<char*>(&sndBufferSize), &sndBufferLength) == SOCKET_ERROR)
-    //{
-    //    std::cerr << "Failed to retrieve send buffer size." << std::endl;
-    //    closesocket(AcceptSocket);
-    //    WSACleanup();
-    //    return 1;
-    //}
-
-    //// Print the maximum receive and send buffer sizes
-    //std::cout << "Maximum receive buffer size: " << rcvBufferSize << " bytes" << std::endl;
-    //std::cout << "Maximum send buffer size: " << sndBufferSize << " bytes" << std::endl;
-
-
-
-
-
 
     SOCKADDR_IN addr;
     int addrlen = sizeof(addr);
@@ -344,7 +373,6 @@ DWORD WINAPI ProcessClient(LPVOID lpParameter)
     char serverPassword[50];
     int iResult;
 
-//again:
     iResult = recv(AcceptSocket, serverUser, 50, 0);
     //cout << ip << " (" << AcceptSocket << ") User recieved: " << serverUser << endl;
     iResult = recv(AcceptSocket, serverPassword, 50, 0);
@@ -353,14 +381,13 @@ DWORD WINAPI ProcessClient(LPVOID lpParameter)
 
     bool userFound = false;
     vector<User> users = db.getUserByUsername(serverUser);
-    for (const auto& user : users)
+    for ( auto& user : users)
     {
         userFound = true;
-        //to test
         if (db.verifyCredentials(serverUser, serverPassword))
         {
-            string userType = user.tipCont;
-            std::cout << ip << " (" << AcceptSocket << ") User logged in: " << user.username << endl;
+            string userType = user.getTipCont();
+            std::cout << ip << " (" << AcceptSocket << ") User logged in: " << user.getUsername() << endl;
             if (userType == "student")
             {
                 userFound = true;
@@ -383,7 +410,7 @@ DWORD WINAPI ProcessClient(LPVOID lpParameter)
 
 
                         //sa verific calea am un % in plus!!!!
-                        string cale = "C:\\POO\\" + to_string(hw.id) + "_" + hw.titlu;
+                        string cale = "C:\\POO\\" + to_string(hw.getID()) + "_" + hw.getTitlu();
                         //sa verific calea aici in plm!!!!
 
                         if (!fs::is_directory(cale.c_str()) || !fs::exists(cale.c_str())) {
@@ -392,7 +419,7 @@ DWORD WINAPI ProcessClient(LPVOID lpParameter)
 
                         char extensie[50] = "n";
                         recv(AcceptSocket, extensie, 4, 0);
-                        cale = cale + "\\" + user.username + '.' + string(extensie);
+                        cale = cale + "\\" + user.getUsername() + '.' + string(extensie);
 
 
                         //aici e send-ul fisierului efectiv, in functie de cale
@@ -412,7 +439,7 @@ DWORD WINAPI ProcessClient(LPVOID lpParameter)
                         outFile.close();
                         std::cout << "S-a primit." << endl;
 
-                        File file{ 0,hw.id,user.username,cale }; 
+                        File file( 0,hw.getID(), user.getUsername(), cale);
                         db.generateFilePath(file);
                         db.updateHomeworkStatus(user, hw);
                     }
@@ -442,6 +469,7 @@ DWORD WINAPI ProcessClient(LPVOID lpParameter)
 
                     if (strcmp(command, "viewStudents") == 0)
                         viewStudentsAssignedToHomework(&AcceptSocket);
+
                 }
                 break;
             }
@@ -480,7 +508,6 @@ DWORD WINAPI ProcessClient(LPVOID lpParameter)
         {
             std::cout << "Inserted incorrect password..." << endl;
             iResult = send(AcceptSocket, "incorrectPassword", 18, 0);
-            //goto again;
         }
     }
 
@@ -488,16 +515,13 @@ DWORD WINAPI ProcessClient(LPVOID lpParameter)
     {
         std::cout << "User not found!" << endl;
         iResult = send(AcceptSocket, "userNotFound", 13, 0);
-        //goto again;
     }
     //<-
     //adica am iesit aici
 
     std::cout << ip << " (" << AcceptSocket << ") disconnected..." << endl;
-    //closesocket(AcceptSocket);
-    //WSACleanup();
-    //cout << "Deconectat"<<endl;
-    DWORD test=1;
+
+    DWORD test=0;
     return test;
 }
 SOCKET initialiseServer()
@@ -565,7 +589,9 @@ SOCKET initialiseServer()
 
 int __cdecl main(void)
 {
-    std::cout << "SERVER" << endl << endl << endl;
+    cout << "================================" << endl;
+    cout << "-----Campus Connect Server------" << endl;
+    cout << "================================" << endl<<endl<<endl;
 
     int iResult;
 
@@ -605,22 +631,3 @@ int __cdecl main(void)
 
     return 0;
 }
-
-
-
-
-//char buffer[65536];
-//int bytesReceived;
-//ofstream outFile("C:\\", std::ios::binary);
-//while ((bytesReceived = recv(AcceptSocket, buffer, sizeof(buffer), 0)) > 0)
-//{
-//    if (strcmp(buffer, "gata") == 0)
-//        break;
-//
-//    outFile.write(buffer, bytesReceived - 1);
-//    std::cout << "Se primeste..." << endl;
-//    Sleep(1);
-//}
-//
-//outFile.close();
-//std::cout << "S-a primit." << endl;

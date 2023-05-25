@@ -1,5 +1,20 @@
 #include "Database.h"
-
+//int Database::getNumberOfTableEntries(const string& table)
+//{
+//    nanodbc::statement stmt(conn);
+//    nanodbc::prepare(stmt, R"(
+//        SELECT COUNT(*) FROM ?;
+//    )");
+//
+//    stmt.statement::bind(0, table.c_str());
+//    nanodbc::result result = stmt.execute();
+//
+//    int nr = 0;
+//    while (result.next())
+//        nr = atoi(result.get<std::string>(0).c_str());
+//
+//    return nr;
+//}
 bool Database::createUser(const User& user) {
     nanodbc::statement stmt(conn);
     nanodbc::prepare(stmt, R"(
@@ -57,7 +72,6 @@ vector<User> Database::getStudentsByHomework(int homeworkID)
             SELECT Accounts.username, Accounts.parola, Accounts.tipCont, Accounts.grupaStudii FROM Accounts WHERE grupaStudii = ( SELECT grupaStudii FROM Homework where id = ? );
         )");
 
-    //std::string user = username;
     stmt.statement::bind(0, &homeworkID);
 
 
@@ -98,48 +112,115 @@ Homework Database::getHomeworkFromIndex(int index)
             SELECT id, grupaStudii, deadline, titlu FROM Homework ORDER BY id OFFSET ? ROWS FETCH NEXT 1 ROWS ONLY;
         )");
 
-    //std::string user = username;
     stmt.statement::bind(0, &index);
 
     nanodbc::result result = stmt.execute();
 
     while (result.next()) {
-        //User user;
         hw.id = atoi(result.get<std::string>(0).c_str());
         hw.grupa = result.get<std::string>(1);
         hw.termenLimita = result.get<std::string>(2);
         hw.titlu = result.get<std::string>(3);
-        //users.push_back(user);
     }
 
     return hw;
 }
 
-//vector<Homework> Database::getHomeworkByIndex(int homeworkID)
-//{
-//    vector<Homework> hw;
-//
-//    nanodbc::statement stmt(conn);
-//    nanodbc::prepare(stmt, R"(
-//            SELECT Accounts.username, Accounts.parola, Accounts.tipCont, Accounts.grupaStudii FROM Accounts WHERE grupaStudii = ( SELECT grupaStudii FROM Homework where id = ? );
-//        )");
-//
-//    //std::string user = username;
-//    stmt.statement::bind(0, &homeworkID);
-//
-//
-//    nanodbc::result result = stmt.execute();
-//
-//    while (result.next()) {
-//        User user;
-//        hw.username = result.get<std::string>(0);
-//        hw.parola = result.get<std::string>(1);
-//        hw.tipCont = result.get<std::string>(2);
-//        hw.grupaStudii = result.get<std::string>(3);
-//        students.push_back(user);
-//    }
-//    return hw;
-//}
+bool Database::generateHomeworkReport(int homeworkID)
+{
+
+    nanodbc::statement stmt(conn);
+    nanodbc::prepare(stmt, R"(
+            EXEC VerificaPosibilitateGenerareRaport ?;
+        )");
+
+ 
+    stmt.statement::bind(0, &homeworkID);
+
+    nanodbc::result result = stmt.execute();
+
+    int x = 0;
+    while (result.next())
+         x = atoi(result.get<std::string>(0).c_str());
+
+    //trebuie dezalocata memoria inainte de a folosi alt statement in acelasi stack frame
+    stmt.close();
+
+    if (x == 0)
+    {
+        return false;
+    }
+    else
+    {
+        nanodbc::statement stmt(conn);
+        nanodbc::prepare(stmt, R"(
+            exec CalculMedieNota ?;
+            )");
+
+        int hID = homeworkID;
+        stmt.statement::bind(0, &hID);
+
+        nanodbc::result result = stmt.execute();
+        return true;
+    }
+    
+}
+
+void Database::markHomework(int homeworkID, const char* user, float mark)
+{
+    nanodbc::statement stmt(conn);
+    nanodbc::prepare(stmt, R"(
+            UPDATE HomeworkStatus SET nota = ? WHERE temaID = ? AND student = ?;
+        )");
+
+
+    stmt.statement::bind(1, &homeworkID);
+    stmt.statement::bind(2, user);
+    stmt.statement::bind(0, &mark);
+
+    nanodbc::result result = stmt.execute();
+
+}
+
+float Database::getMark(int homeworkID, const User& user)
+{
+    float mark = (float)-1.1;
+    nanodbc::statement stmt(conn);
+    nanodbc::prepare(stmt, R"(
+            SELECT CAST(nota AS varchar(10)) FROM HomeworkStatus WHERE student = ? AND temaID = ?;
+        )");
+
+    stmt.statement::bind(0, user.username.c_str());
+    stmt.statement::bind(1, &homeworkID);
+
+    nanodbc::result result = stmt.execute();
+
+    while (result.next()) {
+        mark = stof(result.get<std::string>(0));
+    }
+
+    return mark;
+}
+
+float Database::getMedia(int homeworkID)
+{
+    float mark = (float) -1.1;
+    nanodbc::statement stmt(conn);
+    nanodbc::prepare(stmt, R"(
+            SELECT CAST(medie AS varchar(10)) FROM Homework WHERE id = ?;
+        )");
+
+    
+    stmt.statement::bind(0, &homeworkID);
+
+    nanodbc::result result = stmt.execute();
+
+    while (result.next()) {
+        mark = stof(result.get<std::string>(0));
+    }
+
+    return mark;
+}
 
 bool Database::updateHomeworkStatus(const User& user, const Homework& homework)
 {
@@ -188,9 +269,7 @@ vector<Homework> Database::getAssignedHomeworkForStudent(const User& user)
             SELECT Homework.id, Homework.grupaStudii, Homework.deadline, Homework.titlu FROM Homework INNER JOIN HomeworkStatus ON Homework.id = HomeworkStatus.temaID WHERE HomeworkStatus.student = ?;
         )");
 
-    //std::string user = username;
     stmt.statement::bind(0, user.username.c_str());
-
 
     nanodbc::result result = stmt.execute();
 
@@ -231,7 +310,6 @@ bool Database::generateFilePath(const File& file)
             INSERT INTO Files (temaID, student, cale) VALUES (?, ?, ?);
         )");
 
-
     stmt.statement::bind(0, &file.temaID);
     stmt.statement::bind(1, file.student.c_str());
     stmt.statement::bind(2, file.cale.c_str());
@@ -250,7 +328,6 @@ File Database::getFileAssociated(const string& username, int homeworkID)
             SELECT id, cale FROM Files WHERE temaID = ? AND student = ?;
         )");
 
-    //std::string user = username;
     stmt.statement::bind(1, username.c_str());
     stmt.statement::bind(0, &homeworkID);
 
@@ -340,22 +417,7 @@ bool Database::verifyCredentials(const char* insertedUsername, const char* inser
     else return true;
 }
 
-//int Database::getNumberOfTableEntries(const string& table)
-//{
-//    nanodbc::statement stmt(conn);
-//    nanodbc::prepare(stmt, R"(
-//        SELECT COUNT(*) FROM ?;
-//    )");
-//
-//    stmt.statement::bind(0, table.c_str());
-//    nanodbc::result result = stmt.execute();
-//
-//    int nr = 0;
-//    while (result.next())
-//        nr = atoi(result.get<std::string>(0).c_str());
-//
-//    return nr;
-//}
+
 
 
 void Database::disconnect() {
@@ -380,11 +442,8 @@ bool Database::updateUserDB(const string& username, string parolanoua="no",  str
             UPDATE Accounts SET parola = ?, grupaStudii = ? WHERE username = ?;
         )");
 
-        stmt.statement::bind(0, parolanoua.c_str());
-
-        stmt.statement::bind(1, grupanoua.c_str());
-
-
+    stmt.statement::bind(0, parolanoua.c_str());
+    stmt.statement::bind(1, grupanoua.c_str());
     stmt.statement::bind(2, username.c_str());
 
     nanodbc::result rez = stmt.execute();
@@ -416,17 +475,12 @@ User Database::getUsernameFromIndex(int index)
             SELECT username FROM Accounts ORDER BY username OFFSET ? ROWS FETCH NEXT 1 ROWS ONLY;
         )");
 
-    //std::string user = username;
     stmt.statement::bind(0, &index);
 
     nanodbc::result result = stmt.execute();
 
-    while (result.next()) {
-        //User user;
+    while (result.next())
         users.username = result.get<std::string>(0);
-       
-        //users.push_back(user);
-    }
 
     return users;
 }

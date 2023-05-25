@@ -40,11 +40,15 @@ public:
     User getUsernameFromIndex(int index);
 
     //profesori
+    Homework getHomeworkFromIndex(int index);
     bool createHomework(const Homework& homework);
     vector<User> getStudentsByHomework(int homeworkID);
-    int getNumberOfHomework();
-    Homework getHomeworkFromIndex(int index);
-    //vector<Homework> getHomeworkByIndex(int homeworkID);
+    int getNumberOfHomework();  
+    bool generateHomeworkReport(int homeworkID);
+    void markHomework(int homeworkID, const char* user, float mark);
+    float getMark(int homeworkID, const User& user);
+    float getMedia(int homeworkID);
+
 
     //studenti
     bool updateHomeworkStatus(const User& user,const Homework& homework);
