@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>afterloginprofessor</class>
+ <widget class="QMainWindow" name="afterloginprofessor">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1280</width>
+    <height>732</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>-10</y>
+      <width>1321</width>
+      <height>731</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(D:/Teme Proiecte/POO PROIECT/background.png);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QToolButton" name="logoutButton">
+    <property name="geometry">
+     <rect>
+      <x>1170</x>
+      <y>10</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QToolButton {
+    font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    color: #444444;
+    border-radius: 5px;
+    padding: 8px;
+    border: 1px solid #cccccc;
+    background-color: #f2f2f2;
+}
+
+QToolButton::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left-width: 1px;
+    border-left-color: #cccccc;
+    border-left-style: solid;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: #ffcc99;
+}
+
+QToolButton::down-arrow {
+    image: url(path/to/down-arrow.png);
+    width: 12px;
+    height: 12px;
+}
+QToolButton:hover {
+    background-color: #cccccc;
+}
+
+QToolButton:pressed {
+    background-color: #999999;
+}</string>
+    </property>
+    <property name="text">
+     <string>Logout</string>
+    </property>
+   </widget>
+   <widget class="QFrame" name="frame">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>150</y>
+      <width>141</width>
+      <height>331</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+    font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    color: #444444;
+    border-radius: 5px;
+    padding: 8px;
+    border: 1px solid #cccccc;
+    background-color: #f2f2f2;
+}
+
+QPushButton::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left-width: 1px;
+    border-left-color: #cccccc;
+    border-left-style: solid;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: #ffcc99;
+}
+
+QPushButton::down-arrow {
+    image: url(path/to/down-arrow.png);
+    width: 12px;
+    height: 12px;
+}
+QPushButton:hover {
+    background-color: #cccccc;
+}
+
+QPushButton:pressed {
+    background-color: #999999;
+}</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QToolButton" name="viewButton">
+       <property name="styleSheet">
+        <string notr="true">QToolButton {
+    font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    color: #444444;
+    border-radius: 5px;
+    padding: 8px;
+    border: 1px solid #cccccc;
+    background-color: #f2f2f2;
+}
+
+QToolButton::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left-width: 1px;
+    border-left-color: #cccccc;
+    border-left-style: solid;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: #ffcc99;
+}
+
+QToolButton::down-arrow {
+    image: url(path/to/down-arrow.png);
+    width: 12px;
+    height: 12px;
+}
+QToolButton:hover {
+    background-color: #cccccc;
+}
+
+QToolButton:pressed {
+    background-color: #999999;
+}</string>
+       </property>
+       <property name="text">
+        <string>View homeworks</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="createButton">
+       <property name="styleSheet">
+        <string notr="true">QToolButton {
+    font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    color: #444444;
+    border-radius: 5px;
+    padding: 8px;
+    border: 1px solid #cccccc;
+    background-color: #f2f2f2;
+}
+
+QToolButton::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left-width: 1px;
+    border-left-color: #cccccc;
+    border-left-style: solid;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: #ffcc99;
+}
+
+QToolButton::down-arrow {
+    image: url(path/to/down-arrow.png);
+    width: 12px;
+    height: 12px;
+}
+QToolButton:hover {
+    background-color: #cccccc;
+}
+
+QToolButton:pressed {
+    background-color: #999999;
+}</string>
+       </property>
+       <property name="text">
+        <string>Create homework</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QLabel" name="condetailslabel">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>211</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="welcomeLabel">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>10</y>
+      <width>311</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe UI Black</family>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLineEdit{ border: 2px solid gray; border-radius: 10px}
+
+              QPushButton{ background-color: lightblue; border: none; 
+                           border-radius: 10px; font: bold }
+
+
+#button1 { 
+  background-color: lightgreen;
+}
+
+#textbox1{
+  border: 3px solid red;
+}
+</string>
+    </property>
+    <property name="text">
+     <string>Welcome back, </string>
+    </property>
+   </widget>
+   <zorder>label</zorder>
+   <zorder>frame</zorder>
+   <zorder>logoutButton</zorder>
+   <zorder>condetailslabel</zorder>
+   <zorder>welcomeLabel</zorder>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

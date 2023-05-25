@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>deleteuser</class>
+ <widget class="QMainWindow" name="deleteuser">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1280</width>
+    <height>732</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>1321</width>
+      <height>731</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(D:/Teme Proiecte/POO PROIECT/background.png);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="listWidget">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>150</y>
+      <width>541</width>
+      <height>391</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget {
+    background-color: #f7f7f7;
+    border-radius: 15px;
+    font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    color: #444444;
+}
+
+QLabel {
+    color: #777777;
+}
+
+QPushButton {
+    background-color: #f2d3bd;
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+    padding: 8px;
+}
+
+QPushButton:hover {
+    background-color: #e1b6a1;
+}</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="deleteWidget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>719</x>
+      <y>150</y>
+      <width>401</width>
+      <height>391</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget {
+    background-color: #f2f2f2;
+    border-radius: 15px;
+    font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    color: #666666;
+}
+
+QLabel {
+    color: #999999;
+}
+
+QPushButton {
+    background-color: #ffcc99;
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+    padding: 8px;
+}
+
+QPushButton:hover {
+    background-color: #ffbb77;
+}</string>
+    </property>
+    <widget class="QPushButton" name="deleteButton">
+     <property name="geometry">
+      <rect>
+       <x>260</x>
+       <y>290</y>
+       <width>75</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Delete</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>110</y>
+      <width>501</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel {
+    color: #333;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+QLabel#updateUserLabel {
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 20px;
+}</string>
+    </property>
+    <property name="text">
+     <string>Select the user you want to delete</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>1190</x>
+      <y>0</y>
+      <width>75</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+    font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    color: #444444;
+    border-radius: 5px;
+    padding: 8px;
+    border: 1px solid #cccccc;
+    background-color: #f2f2f2;
+}
+
+QPushButton::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left-width: 1px;
+    border-left-color: #cccccc;
+    border-left-style: solid;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: #ffcc99;
+}
+
+QPushButton::down-arrow {
+    image: url(path/to/down-arrow.png);
+    width: 12px;
+    height: 12px;
+}</string>
+    </property>
+    <property name="text">
+     <string>Back</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
